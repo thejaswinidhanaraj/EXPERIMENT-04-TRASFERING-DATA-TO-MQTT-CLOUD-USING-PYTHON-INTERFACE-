@@ -1,11 +1,11 @@
-### NAME:
-### ROLL NO :
-### DEPARTMENT 
-### DATE
+### NAME: THEJASWINI D
+### ROLL NO : 212223110059
+### DEPARTMENT :B.E.CSE(IOT)
+### DATE: 27.02.2026
 
 
 
-## EXPERIMENT-04-TRASFERING-DATA-TO-MQTT-CLOUD-USING-PYTHON-INTERFACE-
+## EXPERIMENT-05-TRASFERING-DATA-TO-MQTT-CLOUD-USING-PYTHON-INTERFACE-
 
 
 
@@ -138,17 +138,68 @@ Run the Python script.
 
 Check if the message appears in the HiveMQ Web Client.
 ## PROGRAM
-[
 
+```
+!pip install paho-mqtt
+import time
+import paho.mqtt.client as mqtt
+broker = "be4daaf974724cbab01c4f4f3198b687.s1.eu.hivemq.cloud"
+port = 8883
+topic = "iot/demo/sensor"
+username = "hivemq.webclient.1772167943867"
+password = "S5Kh$H*.AXz34ueJ%aj9"
+client = mqtt.Client(client_id="python-publisher-001",
+                    callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
+client.username_pw_set(username, password)
+client.tls_set()
+def on_connect(client, userdata, flags, reasonCode, properties):
+      print("Connected to broker, reasonCode:", reasonCode)
+def on_publish(client, userdata, mid):
+      print("on_publish called, mid:", mid)
+def on_disconnect(client, userdata, reasonCode, properties):
+   print("Disconnected, reasonCode:", reasonCode)
+client.on_connect = on_connect
+client.on_publish = on_publish
+client.on_disconnect = on_disconnect
+client.connect(broker, port, keepalive=60)
+client.loop_start()
+message = "Thejaswini"
+info = client.publish(topic, payload=message, qos=1, retain=True)
+info.wait_for_publish()
+time.sleep(0.2)
+client.loop_stop()
+client.disconnect()
+print(f"Message '{message}' published to topic '{topic}' (qos=1 retain=True)")
+```
 
+```
+!pip install paho-mqtt 
+import paho.mqtt.client as mqtt 
+import time 
+import random 
+import ssl 
+broker = "be4daaf974724cbab01c4f4f3198b687.s1.eu.hivemq.cloud" 
+port = 8883 
+topic = "iot/demo/sensor" 
+username = "hivemq.webclient.1772167943867" 
+password = "S5Kh$H*.AXz34ueJ%aj9" 
+client = mqtt.Client(client_id="publisher") 
+client.username_pw_set(username, password)
+client.tls_set(tls_version=ssl.PROTOCOL_TLS) 
+client.connect(broker, port)
+while True: 
+  temprature = round(random.uniform(20.0, 30.0), 2) 
+  humidity = round(random.uniform(30.0, 70.0), 2) 
+  payload = f"Temprature: {temprature:.2f} C, Humidity: {humidity:.2f}%" 
+  client.publish(topic, payload) 
+  print(f" Published: {payload} + {topic}") 
+  time.sleep(5)
+```
+ ## Simulation Screenshots:
+ 
+<img width="1918" height="907" alt="image" src="https://github.com/user-attachments/assets/f90767ed-b408-4b1b-bc1e-4fc78fbc759c" />
 
-
-
-]
-
-### OUTPUT SCREENSHOTS
-
-
+<img width="1919" height="900" alt="image" src="https://github.com/user-attachments/assets/cffef600-50f7-4cd3-898b-ca60f94e2f2a" />
 
 ## Results
 
